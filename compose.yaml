@@ -1,0 +1,19 @@
+services:
+  tgat: &tgat
+    build: .
+    image: tgat-phase1:cu128
+    user: "${TGAT_UID:-1000}:${TGAT_GID:-1000}"
+    working_dir: /workspace
+    init: true
+    shm_size: 2gb
+    volumes:
+      - .:/workspace
+  tgat-gpu:
+    <<: *tgat
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]

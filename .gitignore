@@ -1,0 +1,23 @@
+# Generated data, caches, checkpoints, and build outputs
+/.hf-cache/
+/data/
+/runs/
+/paper/
+*.safetensors
+*.pt
+*.ckpt
+
+# Local Python and environment files
+__pycache__/
+*.py[cod]
+/.venv/
+/.pytest_cache/
+.env
+.env.*
+
+# Crash dumps and OS files
+/core
+/core.*
+*.log
+.DS_Store
+Thumbs.db

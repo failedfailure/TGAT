@@ -1,0 +1,32 @@
+{
+  "sources": {
+    "eng_Latn": {
+      "repository": "HuggingFaceFW/fineweb",
+      "config": "sample-10BT",
+      "revision": "9bb295ddab0e05d785b879661af7260fed5140fc"
+    },
+    "jpn_Jpan": {
+      "repository": "HuggingFaceFW/fineweb-2",
+      "config": "jpn_Jpan",
+      "revision": "af9c13333eb981300149d5ca60a8e9d659b276b9"
+    },
+    "tur_Latn": {
+      "repository": "HuggingFaceFW/fineweb-2",
+      "config": "tur_Latn",
+      "revision": "af9c13333eb981300149d5ca60a8e9d659b276b9"
+    }
+  },
+  "split_seed": 2026,
+  "splits": {
+    "train.jsonl": {
+      "documents": 4500,
+      "bytes": 12158486,
+      "sha256": "ce791e51a13e0542d3b76b64fd27b1b632a33206a2fe15eac0ac8c586a5978f0"
+    },
+    "heldout.jsonl": {
+      "documents": 192,
+      "bytes": 499384,
+      "sha256": "22022c0e6461021cfdc6ee58dd1c42f3809e412be9dd000825cc92599e9bf296"
+    }
+  }
+}
