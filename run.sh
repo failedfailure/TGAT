@@ -91,6 +91,15 @@ case "${1:-help}" in
         shift
         python3 -m tgat_phase1.downstream_crossover summary "$@"
         ;;
+    downstream-same-rows-smoke|downstream-same-rows-run)
+        action="${1#downstream-same-rows-}"
+        shift
+        gpu env HF_HUB_OFFLINE=1 python -m reproduction.downstream_same_rows "$action" "$@"
+        ;;
+    downstream-same-rows-summary)
+        shift
+        python3 -m reproduction.downstream_same_rows summary "$@"
+        ;;
     routing-quality-prepare|routing-quality-summary)
         action="${1#routing-quality-}"
         shift
@@ -175,6 +184,9 @@ Usage: bash run.sh COMMAND [ARGS]
   downstream-crossover-smoke [--seed SEED ...]            Check G1/G4 with BPE and G3 paths on eight pairs
   downstream-crossover-run [--seed SEED ...]              Score the two crossed combinations on all frozen pairs
   downstream-crossover-summary [--seed SEED ...]          Summarize checkpoint and tokenizer effects
+  downstream-same-rows-smoke [--seed SEED ...]            Check matched LangMAP and G4 rows on eight pairs
+  downstream-same-rows-run [--seed SEED ...]              Score the saved 512-row LangMAP and G4 checkpoints
+  downstream-same-rows-summary [--seed SEED ...]          Report paired G4 minus LangMAP accuracy
   routing-quality-prepare [--archive PATH]           Freeze aligned FLORES-200 text and audit exact overlaps
   routing-quality-smoke [--seed SEED ...]            Check G1/G4 scoring with both tokenizer routes
   routing-quality-run [--seed SEED ...]              Score frozen FLORES-200 and derive the fixed mixed route

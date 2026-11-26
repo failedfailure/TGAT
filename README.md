@@ -105,6 +105,8 @@ bash run.sh downstream-prepare
 bash run.sh downstream-run --seed 42
 bash run.sh downstream-run --groups G1 G3 G4 G6 --seed 43 44
 bash run.sh downstream-summary --groups G1 G3 G4 G6 --seed 42 43 44 --baseline G1
+bash run.sh downstream-same-rows-run --seed 42 43 44
+bash run.sh downstream-same-rows-summary --seed 42 43 44
 bash run.sh downstream-crossover-run --seed 42 43 44
 bash run.sh downstream-crossover-summary --seed 42 43 44
 
@@ -116,7 +118,9 @@ bash run.sh hybrid-training-run --seed 42
 bash run.sh hybrid-training-summary --seed 42
 ```
 
-The downstream preparation stage checks the pinned BLiMP, JBLiMP, and MultiBLiMP sources. FLORES-200 preparation verifies the original Meta archive and accepts `--archive PATH` for a previously downloaded copy. The fixed mixed route uses BPE for English and Japanese and the G3 tokenizer for Turkish. The mixed-training experiment scores both G4 checkpoints with that route.
+The downstream preparation stage checks the pinned BLiMP, JBLiMP, and MultiBLiMP sources. The matched-row comparison uses the saved LangMAP checkpoints from step 3 and verifies their row IDs and training provenance against G4. It scores each checkpoint with its training tokenizer and reuses verified G4 results when available. The summary reports whole-sentence and byte-normalized accuracy and the paired G4 minus LangMAP differences in percentage points. Pair-level scores and settings are saved alongside the other downstream results. Pass `--same-rows-root PATH` to use a different matched-row training output, or use `downstream-same-rows-smoke --seed 42` to score eight pairs.
+
+FLORES-200 preparation verifies the original Meta archive and accepts `--archive PATH` for a previously downloaded copy. The fixed mixed route uses BPE for English and Japanese and the G3 tokenizer for Turkish. The mixed-training experiment scores both G4 checkpoints with that route.
 
 ### 5. Read the outputs
 
