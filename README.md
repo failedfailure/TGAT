@@ -86,6 +86,18 @@ bash run.sh embedding-followup-summary --arm matched full --seed 42
 
 G4 ranks rows by the change in token usage between BPE and G3. G6 samples from the same eligible pool. The frequency-matched arm preserves row counts by G3 frequency band and dominant training language. G5 updates the full tied table.
 
+After those runs, score the saved G1 adapters on the same FineWeb test documents as G2 and G4. Then train with native LangMAP and the fixed 512 row IDs from G4 to measure the boundary reward with the trainable row set held fixed.
+
+```bash
+TGAT_UID="$(id -u)" TGAT_GID="$(id -g)" docker compose run --rm tgat-gpu \
+    env HF_HUB_OFFLINE=1 python -m reproduction.score_fineweb_g1
+TGAT_UID="$(id -u)" TGAT_GID="$(id -g)" docker compose run --rm tgat-gpu \
+    env HF_HUB_OFFLINE=1 python -m reproduction.g2_same_rows --smoke-first --seed 42 43 44
+python3 -m reproduction.g2_same_rows --summary --seed 42 43 44
+```
+
+The commands write paired BPB and run provenance to `runs/pilot/g3-eval/review-bpe/` and `runs/pilot/g3-eval/review-g2-same-rows/`. Each module accepts `--out` to select a different output directory.
+
 ### 4. Score minimal pairs and FLORES-200
 
 ```bash
@@ -93,8 +105,8 @@ bash run.sh downstream-prepare
 bash run.sh downstream-run --seed 42
 bash run.sh downstream-run --groups G1 G3 G4 G6 --seed 43 44
 bash run.sh downstream-summary --groups G1 G3 G4 G6 --seed 42 43 44 --baseline G1
-bash run.sh downstream-crossover-run --seed 42
-bash run.sh downstream-crossover-summary --seed 42
+bash run.sh downstream-crossover-run --seed 42 43 44
+bash run.sh downstream-crossover-summary --seed 42 43 44
 
 bash run.sh routing-quality-prepare
 bash run.sh routing-quality-run --seed 42
@@ -117,7 +129,7 @@ Generated corpora, manifests, weights, scores, and logs are stored in `runs/`. T
 | `tgat_phase1/` | Dataset preparation, tokenization, adaptation, and evaluation |
 | `tests/` | Unit tests for segmentation, model updates, and evaluation |
 | `run.sh`, `Dockerfile`, `compose.yaml`, `requirements.txt` | Experiment entry point and container setup |
-| `reproduction/` | Pinned corpus manifest and verification helper |
+| `reproduction/` | Pinned corpus preparation and supplementary comparisons |
 
 ## Upstream sources
 
