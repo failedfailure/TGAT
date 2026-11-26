@@ -72,6 +72,10 @@ done
 
 G3 selects the boundary reward on UD dev and reports stem-boundary alignment on UD test. Its likelihood runs use the separate FineWeb validation and test documents. G3 trains attention LoRA with the tied embedding table frozen.
 
+The suffix tables, Japanese ending rules, and their fixed weights are defined in [`boundaries.py`](tgat_phase1/boundaries.py). `g3-screen` derives English and Turkish stem counts from the frozen pilot training split and records the rule file's SHA-256 under `inputs.hints_code` in the selection `run.json`. Pass `--out PATH` to reproduce the selection in a separate directory.
+
+After `g3-screen`, run `bash run.sh g3-parity` to compare the complete ordered token ID sequences for zero-reward G3 and pinned native G2 on the pilot training and original holdout sets. The CPU command reports checked, identical, and mismatched document counts by language and split as JSON. If a sequence differs, it includes the document ID and token IDs around the first difference and exits with status 1.
+
 ### 3. Run the embedding controls
 
 ```bash
@@ -97,6 +101,8 @@ python3 -m reproduction.g2_same_rows --summary --seed 42 43 44
 ```
 
 The commands write paired BPB and run provenance to `runs/pilot/g3-eval/review-bpe/` and `runs/pilot/g3-eval/review-g2-same-rows/`. Each module accepts `--out` to select a different output directory.
+
+After all the checkpoints are available, run `bash run.sh fineweb-single-window` for the FineWeb sensitivity check. The scorer retains the same validation and test documents across all routes, keeping only documents that fit within 511 content tokens under BPE, native LangMAP, and G3 so that a leading EOS fits in the 512-position window. It writes document inclusion, split and language sample sizes, byte-weighted BPB, and paired contrasts to `runs/pilot/g3-eval/single-window-bpb/`. Use `--out PATH` to rescore into another directory.
 
 ### 4. Score minimal pairs and FLORES-200
 

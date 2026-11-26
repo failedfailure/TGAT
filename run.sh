@@ -41,6 +41,10 @@ case "${1:-help}" in
         shift
         python3 -m tgat_phase1.g3 screen "$@"
         ;;
+    g3-parity)
+        shift
+        cpu python -m reproduction.check_zero_weight "$@"
+        ;;
     g3-bpb)
         shift
         gpu python -m tgat_phase1.g3 bpb "$@"
@@ -48,6 +52,10 @@ case "${1:-help}" in
     g3-lora)
         shift
         gpu python -m tgat_phase1.g3_lora "$@"
+        ;;
+    fineweb-single-window)
+        shift
+        gpu env HF_HUB_OFFLINE=1 python -m reproduction.score_fineweb_single_window "$@"
         ;;
     embedding-plan)
         shift
@@ -167,8 +175,10 @@ Usage: bash run.sh COMMAND [ARGS]
   batch|status|summary --epochs N [SEED ...]   Use a separate G1/G2 duration arm (N >= 2)
   prepare-g3 [--run PATH]                 Freeze fresh validation and test documents
   g3-screen [--run PATH]                  Select a boundary weight and score stem boundaries on the host
+  g3-parity [--run PATH]                  Compare zero-reward and native G2 token IDs on the pilot corpus
   g3-bpb [--run PATH]                     Verify native IDs and measure base BPB on the frozen G3 texts
   g3-lora [--run PATH] [--seed SEED]       Train one matched G3 adapter and score it against saved G2
+  fineweb-single-window [--seed SEED ...] Score saved checkpoints on a common single-window FineWeb subset
   embedding-plan                          Freeze G4/G6 row IDs and G3 training paths
   embedding-smoke                         Check one optimizer step, validation scoring and adapter reload
   embedding-run [--seed SEED ...]          Train G4/G6 and compare with saved G3 on frozen splits
